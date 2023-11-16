@@ -6,28 +6,51 @@
  ** Seccion: BN
  **/
 
+/* RRLPolicy.java */
+
 package scheduler.scheduling.policies;
 
 import scheduler.processing.SimpleProcess;
 
+import java.util.LinkedList;
+import java.util.Queue;
+
 public class RRLPolicy extends Policy implements Enqueable {
-    // Implement enqueue, remove, and next methods based on First-Come-First-Served
-    // policy
-    // You need to implement the methods defined in the Enqueable interface
+    private final Queue<SimpleProcess> queue;
+
+    // Constructor con parámetros
+    public RRLPolicy(boolean dualProcessor, long quantum) {
+        // Implment enqueue, remove and next base in Round Robin policy
+        // Needs to implement interface Enqueable defined methods
+        this.queue = new LinkedList<>();
+        // Initialize class with provided parameters
+    }
 
     @Override
     public void add(SimpleProcess p) {
-        // Implement enqueue logic for FCFS policy
+        // Implements enqueue logic for Round Robin policy
+        queue.add(p);
+        size++;
+        totalProcesses++;
     }
 
     @Override
     public void remove() {
-        // Implement remove logic for FCFS policy
+        // Implements enqueue logic for Round Robin policy
+        if (!isEmpty()) {
+            queue.poll();
+            size--;
+        }
     }
 
     @Override
     public SimpleProcess next() {
-        // Implement next logic for FCFS policy
-        return null; // Replace null with the actual logic
+        // Implements enqueue logic for Round Robin policy
+        return isEmpty() ? null : queue.peek();
+    }
+
+    // Verify if queue is empty
+    private boolean isEmpty() {
+        return queue.isEmpty();
     }
 }
