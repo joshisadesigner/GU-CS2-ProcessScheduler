@@ -8,26 +8,42 @@
 
 package scheduler.scheduling.policies;
 
+import java.util.concurrent.ConcurrentLinkedQueue;
 import scheduler.processing.SimpleProcess;
 
 public class FCFSPolicy extends Policy implements Enqueable {
-    // Implement enqueue, remove, and next methods based on First-Come-First-Served
-    // policy
-    // You need to implement the methods defined in the Enqueable interface
+    // Use a ConcurrentLinkedQueue for the FCFS policy
+    private ConcurrentLinkedQueue<SimpleProcess> queue;
+
+    public FCFSPolicy() {
+        this.queue = new ConcurrentLinkedQueue<>();
+    }
 
     @Override
     public void add(SimpleProcess p) {
-        // Implement enqueue logic for FCFS policy
+        // Enqueue the process at the end of the queue (FCFS)
+        queue.add(p);
+        size++;
+        totalProcesses++;
     }
 
     @Override
     public void remove() {
-        // Implement remove logic for FCFS policy
+        // Remove the process at the front of the queue (FCFS)
+        if (!isEmpty()) {
+            queue.poll();
+            size--;
+        }
     }
 
     @Override
     public SimpleProcess next() {
-        // Implement next logic for FCFS policy
-        return null; // Replace null with the actual logic
+        // Return the process at the front of the queue (FCFS)
+        return queue.peek();
+    }
+
+    public boolean isEmpty() {
+        // Implement the isEmpty() method for FCFS policy
+        return queue.isEmpty();
     }
 }

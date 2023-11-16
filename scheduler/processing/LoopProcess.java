@@ -10,10 +10,10 @@ package scheduler.processing;
 
 public class LoopProcess extends SimpleProcess {
     // Additional Attributes
-    private int totalProcessingTime; // Processing time for arithmeticProcess
-    private int remainingProcessingTime; // Remaining time for Round Robin
+    private final long totalProcessingTime; // Processing time for arithmeticProcess
+    private long remainingProcessingTime; // Remaining time for Round Robin
 
-    public LoopProcess(int id, int totalProcessingTime) {
+    public LoopProcess(int id, long totalProcessingTime) {
         // Call the constructor with provided id
         super(id);
         this.totalProcessingTime = totalProcessingTime;
@@ -21,16 +21,21 @@ public class LoopProcess extends SimpleProcess {
     }
 
     // totalProcessingTime getter
-    public int getProcessingtime() {
+    public long getProcessingTime() {
         return totalProcessingTime;
     }
 
     // remainingProcessingTime getter
-    public int remainingProcessingTime() {
+    public long remainingProcessingTime() {
         return remainingProcessingTime;
     }
 
     public void setRemainingProcessingTime(int remainingProcessingTime) {
         this.remainingProcessingTime = remainingProcessingTime;
+    }
+
+    @Override
+    public String toString() {
+        return "[id:" + getId() + ", type: L, time: " + totalProcessingTime + "]";
     }
 }
