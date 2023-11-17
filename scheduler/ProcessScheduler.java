@@ -94,6 +94,29 @@ public class ProcessScheduler {
 
         Scanner scanner = new Scanner(System.in);
 
+        // Initializing the Threads
+        Thread simulationThread = new Thread(() -> runSimulation(processQueue, processGenerator, policy));
+        Thread inputThread = new Thread(() -> handleInput(scanner));
+
+        // Thread Start
+        simulationThread.start();
+        inputThread.start();
+
+        try {
+            simulationThread.join();
+            inputThread.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        System.out.println("Simulación terminada.");
+        System.out.println("Procesos procesados: " + policy.totalProcesses());
+        System.out.println("Procesos restantes en la cola: " + processQueue.size());
+        System.out.println("Tiempo promedio de procesamiento por proceso: " +  ((double) policy.totalProcesses() / policy.totalProcesses()));
+        System.out.println("Política utilizada: " + policy.getClass().getSimpleName());
+    }
+
+    private static void runSimulation(ProcessQueue processQueue, ProcessGenerator processGenerator, Policy policy) {
         while (true) {
             processGenerator.generateRandomProcesses(
                     processQueue,
@@ -110,28 +133,29 @@ public class ProcessScheduler {
             SimpleProcess currentProcess = processQueue.dequeue();
 
             if (currentProcess != null) {
+                // Process actual process and add to queue
                 System.out.println("Processing: " + currentProcess.toString());
                 Processor.process(currentProcess);
                 policy.add(currentProcess);  // Agregar el proceso procesado a la política
             }
 
-            System.out.print("Presione 'q' para salir o cualquier otra tecla pra continuar: ");
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
+        }
+    }
+
+    private static void handleInput(Scanner scanner) {
+        while (true) {
+            System.out.print("Presiona 'q' para salir: ");
             String input = scanner.nextLine();
 
             if ("q".equalsIgnoreCase(input)) {
-                break;
+                System.exit(0);
             }
         }
-
-        // Cálculo del tiempo de procesamiento promedio por proceso
-        double tiempoPromedio = processQueue.isEmpty() ? 0 :
-                (double) policy.totalProcesses() / processQueue.size();
-
-        System.out.println("Simulación Terminada.");
-        System.out.println("Procesos procesados: " + policy.totalProcesses());
-        System.out.println("Processes restantes: " + processQueue.size());
-        System.out.println("Tiempo de procesamiento promedio por proceso: " + tiempoPromedio);
-        System.out.println("Tiempo de procesamiento promedio por proceso: " + (double) policy.totalProcesses());
-        System.out.println("Politica Utilizada: " + policy.getClass().getSimpleName());
     }
 }
