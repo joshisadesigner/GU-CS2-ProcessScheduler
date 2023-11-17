@@ -17,22 +17,23 @@ import java.util.Scanner;
 
 
 public class ProcessScheduler {
-    public static void main(String[] args) {
-        // Implementation for the main method
-        boolean dualProcessor = false;
+    // Implementation for the main method
+    // Variable and Initial code
+    static boolean dualProcessor = false;
 
-        double finalTime = 0;
-        double initialTime = 0;
-        double condTime = 0;
+    static double finalTime = 0;
+    static double initialTime = 0;
+    static double condTime = 0;
 
-        int loopTime = 0;
-        int quantum = 0;
-        int startIndex = 0;
+    static int loopTime = 0;
+    static int quantum = 0;
+    static int startIndex = 0;
 
-        long arithTime = 0;
-        long ioTime = 0;
+    static long arithTime = 0;
+    static long ioTime = 0;
 
-        String policyProcess = "";
+    static String policyProcess = "";
+    public static void main(String[] args) {;
         String timeRange = "";
 
 
@@ -100,6 +101,7 @@ public class ProcessScheduler {
                     new long[] { arithTime, ioTime, (long) condTime, loopTime }
             );
 
+            // Display information of current state
             System.out.println("Procesos en cola: " + processQueue.size());
             System.out.println("Politica: " + policy.getClass().getSimpleName());
             System.out.println("Cantidad de programas procesados: " + policy.totalProcesses());
