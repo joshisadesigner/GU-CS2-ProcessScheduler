@@ -1,3 +1,4 @@
+package scheduler;
 /* ProcessScheduler.java */
 
 /**
@@ -6,23 +7,43 @@
  ** Seccion: BN
  **/
 
-import scheduler.ProcessGenerator;
-import scheduler.ProcessQueue;
-import scheduler.Processor;
 import scheduler.processing.SimpleProcess;
 import scheduler.scheduling.policies.Policy;
+import scheduler.scheduling.policies.PolicyFactory;
+import static scheduler.Processor.process;
+
 
 import java.util.Scanner;
 
+
 public class ProcessScheduler {
     public static void main(String[] args) {
+        // Implementation for the main method
+        boolean dualProcessor = false;
+
+        double finalTime = 0;
+        double initialTime = 0;
+        double condTime = 0;
+
+        int loopTime = 0;
+        int quantum = 0;
+        int startIndex = 0;
+
+        long arithTime = 0;
+        long ioTime = 0;
+
+        String policyProcess = "";
+        String timeRange = "";
+
+
+        // Arguments Verification
+        String Error = ("Usage: java ProcessScheduler [-dual] -poliy timeRange arith io cond loop [quantum]");
+
+        // Arguments Verification
         if (args.length < 6) {
-            System.out.println("Usage: java ProcessScheduler [-dual] -policy timeRange arith io cond loop [quantum]");
+            System.out.println(Error);
             return;
         }
-
-        boolean dualProcessor = false;
-        int startIndex = 0;
 
         if ("-dual".equals(args[0])) {
             dualProcessor = true;
@@ -30,20 +51,39 @@ public class ProcessScheduler {
         }
 
         String policyType = args[startIndex];
-        int timeRange = Integer.parseInt(args[startIndex + 1]);
-        int arithTime = Integer.parseInt(args[startIndex + 2]);
-        int ioTime = Integer.parseInt(args[startIndex + 3]);
-        int condTime = Integer.parseInt(args[startIndex + 4]);
-        int loopTime = Integer.parseInt(args[startIndex + 5]);
 
-        int quantum = 0; // Default quantum for policies other than Round Robin
+        if ("-fcfs".equals(policyType) || "-lcfs".equals(policyType) || "-rr".equals(policyType) || "-pp".equals(policyType)) {
 
-        if ("rr".equals(policyType)) {
-            if (args.length < startIndex + 7) {
-                System.out.println("Quantum is required for Round Robin policy.");
-                return;
+            if (args[startIndex].equals("-fcfs")) {
+                policyProcess = "First Come First Served";
+            } else if (args[startIndex].equals("-rr")) {
+                policyProcess = "Round Robin";
+                if (args.length < startIndex + 7) {
+                    System.out.println("Quatum es requerido para la politica -rr ");
+                    System.exit(0);
+                }
+                quantum = Integer.parseInt(args[startIndex + 6]);
+            } else if (args[startIndex].equals("-lcfs")) {
+                policyProcess = "Last Come First Served";
+            } else {
+                policyProcess = "Priority Policy";
             }
-            quantum = Integer.parseInt(args[startIndex + 6]);
+
+            timeRange = args[startIndex + 1];
+            int splitter = timeRange.indexOf("-");
+            String initialTimeStr = timeRange.substring(0, splitter);
+            String finalTimeStr = timeRange.substring(splitter + 1);
+
+            initialTime = Double.parseDouble(initialTimeStr);
+            finalTime = Double.parseDouble(finalTimeStr);
+            arithTime = Long.parseLong(args[startIndex + 2]);
+            ioTime = Long.parseLong(args[startIndex + 3]);
+            condTime = Double.parseDouble(args[startIndex + 4]);
+            loopTime = Integer.parseInt(args[startIndex + 5]);
+
+        } else {
+            System.out.println(Error);
+            System.exit(0);
         }
 
         ProcessQueue processQueue = new ProcessQueue();
@@ -53,22 +93,26 @@ public class ProcessScheduler {
         Scanner scanner = new Scanner(System.in);
 
         while (true) {
-            processGenerator.generateRandomProcesses(processQueue, 1, new String[] { "arith", "io", "cond", "loop" },
-                    new int[] { arithTime, ioTime, condTime, loopTime });
+            processGenerator.generateRandomProcesses(
+                    processQueue,
+                    1,
+                    new String[] { "arith", "io", "cond", "loop" },
+                    new long[] { arithTime, ioTime, (long) condTime, loopTime }
+            );
 
-            System.out.println("Current queue: " + processQueue.toString());
-            System.out.println("Policy: " + policy.getClass().getSimpleName());
-            System.out.println("Number of processes handled: " + policy.getTotalProcesses());
+            System.out.println("Procesos en cola: " + processQueue.size());
+            System.out.println("Politica: " + policy.getClass().getSimpleName());
+            System.out.println("Cantidad de programas procesados: " + policy.totalProcesses());
 
-            SimpleProcess currentProcess = policy.next();
+            SimpleProcess currentProcess = processQueue.dequeue();
 
             if (currentProcess != null) {
                 System.out.println("Processing: " + currentProcess.toString());
                 Processor.process(currentProcess);
-                policy.remove();
+                policy.add(currentProcess);  // Agregar el proceso procesado a la política
             }
 
-            System.out.print("Press 'q' to quit or any other key to continue: ");
+            System.out.print("Presione 'q' para salir o cualquier otra tecla pra continuar: ");
             String input = scanner.nextLine();
 
             if ("q".equalsIgnoreCase(input)) {
@@ -76,10 +120,15 @@ public class ProcessScheduler {
             }
         }
 
-        System.out.println("Simulation ended.");
-        System.out.println("Processes handled: " + policy.getTotalProcesses());
-        System.out.println("Processes remaining: " + processQueue.size());
-        System.out.println("Average processing time per process: " + policy.getAverageProcessingTime());
-        System.out.println("Policy used: " + policy.getClass().getSimpleName());
+        // Cálculo del tiempo de procesamiento promedio por proceso
+        double tiempoPromedio = processQueue.isEmpty() ? 0 :
+                (double) policy.totalProcesses() / processQueue.size();
+
+        System.out.println("Simulación Terminada.");
+        System.out.println("Procesos procesados: " + policy.totalProcesses());
+        System.out.println("Processes restantes: " + processQueue.size());
+        System.out.println("Tiempo de procesamiento promedio por proceso: " + tiempoPromedio);
+        System.out.println("Tiempo de procesamiento promedio por proceso: " + (double) policy.totalProcesses());
+        System.out.println("Politica Utilizada: " + policy.getClass().getSimpleName());
     }
 }
