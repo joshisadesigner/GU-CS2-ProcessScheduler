@@ -33,8 +33,9 @@ public class ProcessScheduler {
     static long ioTime = 0;
 
     static String policyProcess = "";
+    static String timeRange = "";
+
     public static void main(String[] args) {;
-        String timeRange = "";
 
 
         // Arguments Verification
