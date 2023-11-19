@@ -12,7 +12,7 @@ import scheduler.scheduling.policies.Policy;
 import scheduler.scheduling.policies.PolicyFactory;
 import static scheduler.Processor.process;
 
-
+import java.util.Random;
 import java.util.Scanner;
 
 
@@ -64,7 +64,7 @@ public class ProcessScheduler {
                     System.out.println("Quatum es requerido para la politica -rr ");
                     System.exit(0);
                 }
-                quantum = Integer.parseInt(args[startIndex + 6]);
+                quantum = (int) Double.parseDouble(args[startIndex + 6]);
             } else if (args[startIndex].equals("-lcfs")) {
                 policyProcess = "Last Come First Served";
             } else {
@@ -78,7 +78,7 @@ public class ProcessScheduler {
 
             initialTime = Double.parseDouble(initialTimeStr);
             finalTime = Double.parseDouble(finalTimeStr);
-            arithTime = Long.parseLong(args[startIndex + 2]);
+            arithTime = (long) Double.parseDouble(args[startIndex + 2]);
             ioTime = Long.parseLong(args[startIndex + 3]);
             condTime = Double.parseDouble(args[startIndex + 4]);
             loopTime = Integer.parseInt(args[startIndex + 5]);
@@ -96,7 +96,7 @@ public class ProcessScheduler {
 
         // Initializing the Threads
         Thread simulationThread = new Thread(() -> runSimulation(processQueue, processGenerator, policy));
-        Thread inputThread = new Thread(() -> handleInput(scanner));
+        Thread inputThread = new Thread(() -> handleInput(scanner, processQueue, policy));
 
         // Thread Start
         simulationThread.start();
@@ -108,12 +108,6 @@ public class ProcessScheduler {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-
-        System.out.println("Simulación terminada.");
-        System.out.println("Procesos procesados: " + policy.totalProcesses());
-        System.out.println("Procesos restantes en la cola: " + processQueue.size());
-        System.out.println("Tiempo promedio de procesamiento por proceso: " +  ((double) policy.totalProcesses() / policy.totalProcesses()));
-        System.out.println("Política utilizada: " + policy.getClass().getSimpleName());
     }
 
     private static void runSimulation(ProcessQueue processQueue, ProcessGenerator processGenerator, Policy policy) {
@@ -126,6 +120,7 @@ public class ProcessScheduler {
             );
 
             // Display information of current state
+            System.out.println();
             System.out.println("Procesos en cola: " + processQueue.size());
             System.out.println("Politica: " + policy.getClass().getSimpleName());
             System.out.println("Cantidad de programas procesados: " + policy.totalProcesses());
@@ -135,25 +130,34 @@ public class ProcessScheduler {
             if (currentProcess != null) {
                 // Process actual process and add to queue
                 System.out.println("Processing: " + currentProcess.toString());
-                Processor.process(currentProcess);
+                process(currentProcess);
                 policy.add(currentProcess);  // Agregar el proceso procesado a la política
             }
 
             try {
-                Thread.sleep(100);
+                Thread.sleep(currentProcess.getProcessingTime() * 1000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-
+            System.out.println();
         }
     }
 
-    private static void handleInput(Scanner scanner) {
+    private static void handleInput(Scanner scanner, ProcessQueue processQueue, Policy policy) {
         while (true) {
-            System.out.print("Presiona 'q' para salir: ");
+            System.out.print("Presiona 'q' para salir... \n");
             String input = scanner.nextLine();
 
             if ("q".equalsIgnoreCase(input)) {
+
+                System.out.println("---------------------------------------------------");
+                System.out.println("Simulación terminada.");
+                System.out.println("Procesos procesados: " + policy.totalProcesses());
+                System.out.println("Procesos restantes en la cola: " + processQueue.size());
+                System.out.println("Tiempo promedio de procesamiento por proceso: " +  ((double) policy.totalProcesses() / policy.totalProcesses()));
+                System.out.println("Política utilizada: " + policy.getClass().getSimpleName());
+                System.out.println("---------------------------------------------------");
+
                 System.exit(0);
             }
         }

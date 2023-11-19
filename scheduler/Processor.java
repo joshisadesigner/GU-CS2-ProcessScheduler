@@ -8,6 +8,7 @@ public class Processor {
     public static void process(SimpleProcess process) {
         try {
             // Simulate processing time by sleeping for the specified duration
+            System.out.println("ProcessingTime: " + process.getProcessingTime() * 1000);
             Thread.sleep(process.getProcessingTime());
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();

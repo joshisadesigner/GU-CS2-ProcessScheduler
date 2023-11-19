@@ -35,35 +35,39 @@ public class ProcessGenerator {
     }
 
     public void generateRandomProcesses(
-            ProcessQueue queue,
-            int numProcesses,
-            String[] processTypes,
-            long[] processingTimes) {
-        Random random = new Random();
+        ProcessQueue queue,
+        int numProcesses,
+        String[] processTypes,
+        long[] processingTimes
+    ){
 
-        for (int i = 0; i < numProcesses; i++) {
-            int randomTypeIndex = random.nextInt(processTypes.length);
-            long randomTimeIndex = random.nextInt(processingTimes.length);
+            Random random = new Random();
 
-            SimpleProcess process;
-            switch (processTypes[randomTypeIndex]) {
-                case "arith":
-                    process = new ArithmeticProcess(generateId(), randomTimeIndex);
-                    break;
-                case "io":
-                    process = new IOProcess(generateId(), randomTimeIndex);
-                    break;
-                case "cond":
-                    process = new ConditionalProcess(generateId(), randomTimeIndex);
-                    break;
-                case "loop":
-                    process = new LoopProcess(generateId(), randomTimeIndex);
-                    break;
-                default:
-                    throw new IllegalArgumentException("Invalid process type: " + randomTypeIndex);
+            for (int i = 0; i < numProcesses; i++) {
+                int randomTypeIndex = random.nextInt(processTypes.length);
+                long randomTimeIndex = random.nextInt(processingTimes.length);
+
+//                System.out.println("randomtimeIndex: " + randomTimeIndex);
+
+                SimpleProcess process;
+                switch (processTypes[randomTypeIndex]) {
+                    case "arith":
+                        process = new ArithmeticProcess(generateId(), randomTimeIndex);
+                        break;
+                    case "io":
+                        process = new IOProcess(generateId(), randomTimeIndex);
+                        break;
+                    case "cond":
+                        process = new ConditionalProcess(generateId(), randomTimeIndex);
+                        break;
+                    case "loop":
+                        process = new LoopProcess(generateId(), randomTimeIndex);
+                        break;
+                    default:
+                        throw new IllegalArgumentException("Invalid process type: " + randomTypeIndex);
+                }
+
+                queue.enqueue(process);
             }
-
-            queue.enqueue(process);
-        }
     }
 }
