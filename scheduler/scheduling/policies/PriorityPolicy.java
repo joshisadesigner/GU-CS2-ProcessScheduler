@@ -11,16 +11,15 @@
 package scheduler.scheduling.policies;
 
 import scheduler.processing.SimpleProcess;
-import java.util.Comparator;
-import java.util.PriorityQueue;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class PriorityPolicy extends Policy implements Enqueable {
     // Se utiliza PriorityQueue para la politica
-    private PriorityQueue<SimpleProcess> priorityQueue;
+    private ConcurrentLinkedQueue<SimpleProcess> priorityQueue;
 
     // Se crea un nuevo ConcurrentLinkedQueue
     public PriorityPolicy() {
-        this.priorityQueue = new PriorityQueue<>(Comparator.comparingLong(SimpleProcess::getProcessingTime));
+        this.priorityQueue = new ConcurrentLinkedQueue<>();
     }
 
     // Se agrega el proceso a la cola
