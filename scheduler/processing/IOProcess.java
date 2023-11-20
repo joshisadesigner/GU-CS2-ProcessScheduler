@@ -10,11 +10,11 @@ package scheduler.processing;
 
 public class IOProcess extends SimpleProcess {
     // Additional Attributes
-    private final long totalProcessingTime; // Processing time for arithmeticProcess
-    private long remainingProcessingTime; // Remaining time for Round Robin
+    private final long totalProcessingTime; // Tiempo de proceso para IOProcess
+    private long remainingProcessingTime; // Tiempo restante para IOProcess
 
     public IOProcess(int id, long totalProcessingTime) {
-        // Call the constructor with provided id
+        // e llama el constructor con id proveido
         super(id);
         this.totalProcessingTime = totalProcessingTime;
         this.remainingProcessingTime = totalProcessingTime;

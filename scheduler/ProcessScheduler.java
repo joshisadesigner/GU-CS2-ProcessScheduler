@@ -17,8 +17,7 @@ import java.util.Scanner;
 
 
 public class ProcessScheduler {
-    // Implementation for the main method
-    // Variable and Initial code
+    // Se generan variables globales a utilizar en diferentes metodos
     static boolean dualProcessor = false;
 
     static double finalTime = 0;
@@ -52,23 +51,25 @@ public class ProcessScheduler {
             startIndex = 1;
         }
 
-        String policyType = args[startIndex];
+        String policyType = args[startIndex]; // startIndex 0 o 1.
 
         if ("-fcfs".equals(policyType) || "-lcfs".equals(policyType) || "-rr".equals(policyType) || "-pp".equals(policyType)) {
 
             if (args[startIndex].equals("-fcfs")) {
                 policyProcess = "First Come First Served";
-            } else if (args[startIndex].equals("-rr")) {
+            } else if (args[startIndex].equals("-lcfs")) {
+                policyProcess = "Last Come First Served";
+            } else if (args[startIndex].equals("-pp")) {
+                policyProcess = "Priority Policy";
+            } else {
                 policyProcess = "Round Robin";
+
                 if (args.length < startIndex + 7) {
                     System.out.println("Quatum es requerido para la politica -rr ");
                     System.exit(0);
                 }
+
                 quantum = (int) Double.parseDouble(args[startIndex + 6]);
-            } else if (args[startIndex].equals("-lcfs")) {
-                policyProcess = "Last Come First Served";
-            } else {
-                policyProcess = "Priority Policy";
             }
 
             timeRange = args[startIndex + 1];
@@ -88,6 +89,7 @@ public class ProcessScheduler {
             System.exit(0);
         }
 
+        // Se crea una instancia de ProcessQueue
         ProcessQueue processQueue = new ProcessQueue();
         ProcessGenerator processGenerator = new ProcessGenerator();
         Policy policy = PolicyFactory.createPolicy(policyType, dualProcessor, quantum);

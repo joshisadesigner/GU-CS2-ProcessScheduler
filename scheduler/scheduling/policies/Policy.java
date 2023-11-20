@@ -9,7 +9,7 @@
 	
 package scheduler.scheduling.policies;
 
-import scheduler.processing.SimpleProcess;
+//import scheduler.processing.SimpleProcess;
 	
  public abstract class Policy implements Enqueable {
 	/** El campo size va a representar el numero de procesos activos, 

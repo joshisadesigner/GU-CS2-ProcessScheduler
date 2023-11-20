@@ -44,9 +44,9 @@ public abstract class SimpleProcess {
 	}
 
 	/**
-	 * Returns the processing time for the process.
+	 * Devuelve el tiempo de procesos para el proceso
 	 *
-	 * @return the processing time in milliseconds
+	 * @return el tiempo de proceso en milisegundos
 	 */
 	public abstract long getProcessingTime();
 
