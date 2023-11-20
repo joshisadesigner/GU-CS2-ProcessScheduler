@@ -43,7 +43,7 @@ public class FCFSPolicy extends Policy implements Enqueable {
     // Devuelve el proceso al frente de la cola
     @Override
     public SimpleProcess next() {
-        return queue.peek();
+        return isEmpty() ? null : queue.peek();
     }
 
     // Devuelve si la cola tiene o no procesos

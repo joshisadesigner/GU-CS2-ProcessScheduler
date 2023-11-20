@@ -11,7 +11,6 @@
 package scheduler.scheduling.policies;
 
 import scheduler.processing.SimpleProcess;
-
 import java.util.LinkedList;
 import java.util.Queue;
 
