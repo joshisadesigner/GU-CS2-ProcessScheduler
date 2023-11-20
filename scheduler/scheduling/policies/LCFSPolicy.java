@@ -9,7 +9,6 @@
 package scheduler.scheduling.policies;
 
 import scheduler.processing.SimpleProcess;
-
 import java.util.Stack;  // Agrega esta importación
 
 public class LCFSPolicy extends Policy implements Enqueable {
@@ -26,7 +25,6 @@ public class LCFSPolicy extends Policy implements Enqueable {
     // se aumenta el total de procesos
     @Override
     public void add(SimpleProcess p) {
-        // Implementar lógica de encolar para la política LCFS
         queue.push(p);
         size++;
         totalProcesses++;
