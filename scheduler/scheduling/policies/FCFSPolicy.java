@@ -12,38 +12,42 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import scheduler.processing.SimpleProcess;
 
 public class FCFSPolicy extends Policy implements Enqueable {
-    // Use a ConcurrentLinkedQueue for the FCFS policy
+    // Se utiliza ConcurrentLinkedQueue para la politica
     private ConcurrentLinkedQueue<SimpleProcess> queue;
 
+    // Se crea un nuevo ConcurrentLinkedQueue
     public FCFSPolicy() {
         this.queue = new ConcurrentLinkedQueue<>();
     }
 
+    // Se agrega el proceso a la cola
+    // Se aumenta el tamaño de la politica
+    // se aumenta el total de procesos
     @Override
     public void add(SimpleProcess p) {
-        // Enqueue the process at the end of the queue (FCFS)
         queue.add(p);
         size++;
         totalProcesses++;
     }
 
+    // Remueve el proceso en la cola
+    // Se reduce el tamaño de la politica
     @Override
     public void remove() {
-        // Remove the process at the front of the queue (FCFS)
         if (!isEmpty()) {
             queue.poll();
             size--;
         }
     }
 
+    // Devuelve el proceso al frente de la cola
     @Override
     public SimpleProcess next() {
-        // Return the process at the front of the queue (FCFS)
         return queue.peek();
     }
 
+    // Devuelve si la cola tiene o no procesos
     public boolean isEmpty() {
-        // Implement the isEmpty() method for FCFS policy
         return queue.isEmpty();
     }
 }

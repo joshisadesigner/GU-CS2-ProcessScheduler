@@ -15,37 +15,41 @@ import java.util.Comparator;
 import java.util.PriorityQueue;
 
 public class PriorityPolicy extends Policy implements Enqueable {
-    // Utiliza una PriorityQueue para representar la cola de prioridad
+    // Se utiliza PriorityQueue para la politica
     private PriorityQueue<SimpleProcess> priorityQueue;
 
+    // Se crea un nuevo ConcurrentLinkedQueue
     public PriorityPolicy() {
         this.priorityQueue = new PriorityQueue<>(Comparator.comparingLong(SimpleProcess::getProcessingTime));
     }
 
+    // Se agrega el proceso a la cola
+    // Se aumenta el tamaño de la politica
+    // se aumenta el total de procesos
     @Override
     public void add(SimpleProcess p) {
-        // Implementa la lógica de encolar para la política de prioridad
         priorityQueue.add(p);
         size++;
         totalProcesses++;
     }
 
+    // Remueve el proceso en la cola
+    // Se reduce el tamaño de la politica
     @Override
     public void remove() {
-        // Implementa la lógica de eliminación para la política de prioridad
         if (!isEmpty()) {
             priorityQueue.poll();
             size--;
         }
     }
 
+    // Devuelve el proceso al frente de la cola
     @Override
     public SimpleProcess next() {
-        // Implementa la lógica de siguiente para la política de prioridad
         return isEmpty() ? null : priorityQueue.peek();
     }
 
-    // Utiliza el método isEmpty para verificar si la cola está vacía
+    // Devuelve si la cola tiene o no procesos
     private boolean isEmpty() {
         return priorityQueue.isEmpty();
     }

@@ -16,40 +16,41 @@ import java.util.LinkedList;
 import java.util.Queue;
 
 public class RRLPolicy extends Policy implements Enqueable {
+    // Se utiliza Queue para la politica
     private final Queue<SimpleProcess> queue;
 
-    // Constructor con parámetros
+    // Se crea un nuevo Queue
     public RRLPolicy(boolean dualProcessor, long quantum) {
-        // Implment enqueue, remove and next base in Round Robin policy
-        // Needs to implement interface Enqueable defined methods
         this.queue = new LinkedList<>();
-        // Initialize class with provided parameters
     }
 
+    // Se agrega el proceso a la cola
+    // Se aumenta el tamaño de la politica
+    // se aumenta el total de procesos
     @Override
     public void add(SimpleProcess p) {
-        // Implements enqueue logic for Round Robin policy
         queue.add(p);
         size++;
         totalProcesses++;
     }
 
+    // Remueve el proceso en la cola
+    // Se reduce el tamaño de la politica
     @Override
     public void remove() {
-        // Implements enqueue logic for Round Robin policy
         if (!isEmpty()) {
             queue.poll();
             size--;
         }
     }
 
+    // Devuelve el proceso al frente de la cola
     @Override
     public SimpleProcess next() {
-        // Implements enqueue logic for Round Robin policy
         return isEmpty() ? null : queue.peek();
     }
 
-    // Verify if queue is empty
+    // Devuelve si la cola tiene o no procesos
     private boolean isEmpty() {
         return queue.isEmpty();
     }
