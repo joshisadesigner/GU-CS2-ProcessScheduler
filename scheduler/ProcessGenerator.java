@@ -11,9 +11,11 @@ package scheduler;
 import scheduler.processing.*;
 import java.util.Random;
 
+// Esta clase representa los procesos generados para ser utilizados en el simulador
+
 public class ProcessGenerator {
     private static final Random random = new Random();
-    private int idCounter = 1; // Counter for generating unique process IDs
+    private int idCounter = 1; // contador para generar IDs de procesos unicos
 
     public SimpleProcess generateProcess(String processType, long processingTime) {
         switch (processType.toLowerCase()) {
@@ -30,6 +32,7 @@ public class ProcessGenerator {
         }
     }
 
+    // Método privado para generar un ID aleatorio para un proceso.
     private int generateId() {
         return random.nextInt(1000) + 1; // Generate a random id between 1 and 1000
     }
@@ -41,15 +44,21 @@ public class ProcessGenerator {
         long[] processingTimes
     ){
 
+            // i.e.: ProcessTypes: ["arith"], ["io"], ["cond"], ["loop"] <-- length 3
             Random random = new Random();
 
             for (int i = 0; i < numProcesses; i++) {
-                int randomTypeIndex = random.nextInt(processTypes.length);
-                long randomTimeIndex = random.nextInt(processingTimes.length);
+                // Se genera un numero aleatoreo para el index del tipo de proceso
+                int randomTypeIndex = random.nextInt(processTypes.length); // <-- del 0 al tamaño
+                // se genera un numero aleatoreo para el index de tiempos de proceso
+                long randomTimeIndex = random.nextInt(processingTimes.length); // <-- del 0 al tamaño
 
-//                System.out.println("randomtimeIndex: " + randomTimeIndex);
+                // System.out.println("randomtimeIndex: " + randomTimeIndex);
 
                 SimpleProcess process;
+
+                // Dependiendo del numero aleatorio creado
+                // se selecciona el index de processType para generar el proceso
                 switch (processTypes[randomTypeIndex]) {
                     case "arith":
                         process = new ArithmeticProcess(generateId(), randomTimeIndex);
@@ -64,7 +73,7 @@ public class ProcessGenerator {
                         process = new LoopProcess(generateId(), randomTimeIndex);
                         break;
                     default:
-                        throw new IllegalArgumentException("Invalid process type: " + randomTypeIndex);
+                        throw new IllegalArgumentException("Proceso de tipo invalido: " + randomTypeIndex);
                 }
 
                 queue.enqueue(process);
